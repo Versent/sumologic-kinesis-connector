@@ -1,17 +1,12 @@
 package com.sumologic.client;
 
-import org.apache.log4j.Logger;
-
+import com.amazonaws.services.kinesis.connectors.KinesisConnectorConfiguration;
+import com.amazonaws.services.kinesis.connectors.impl.AllPassFilter;
+import com.amazonaws.services.kinesis.connectors.impl.BasicMemoryBuffer;
+import com.amazonaws.services.kinesis.connectors.interfaces.*;
 import com.sumologic.client.implementations.SumologicEmitter;
 import com.sumologic.client.model.SimpleKinesisMessageModel;
-import com.amazonaws.services.kinesis.connectors.interfaces.IKinesisConnectorPipeline;
-import com.amazonaws.services.kinesis.connectors.KinesisConnectorConfiguration;
-import com.amazonaws.services.kinesis.connectors.impl.BasicMemoryBuffer;
-import com.amazonaws.services.kinesis.connectors.impl.AllPassFilter;
-import com.amazonaws.services.kinesis.connectors.interfaces.IEmitter;
-import com.amazonaws.services.kinesis.connectors.interfaces.IBuffer;
-import com.amazonaws.services.kinesis.connectors.interfaces.ITransformer;
-import com.amazonaws.services.kinesis.connectors.interfaces.IFilter;
+import org.apache.log4j.Logger;
 
 
 /**
@@ -40,27 +35,27 @@ public class SumologicMessageModelPipeline implements
 
     @Override
     public ITransformer<SimpleKinesisMessageModel, String>
-            getTransformer(KinesisConnectorConfiguration configuration) {
-      
-      // Load specified class
-      String argClass = ((KinesisConnectorForSumologicConfiguration)configuration).TRANSFORMER_CLASS;
-      String className = "com.sumologic.client."+argClass;
-      ClassLoader classLoader = SumologicMessageModelPipeline.class.getClassLoader();
-      Class ModelClass = null;
-      try {
-        ModelClass = classLoader.loadClass(className);
-        ITransformer<SimpleKinesisMessageModel, String> ITransformerObject = (ITransformer<SimpleKinesisMessageModel, String>)ModelClass.newInstance();
-        LOG.info("Using transformer: "+ITransformerObject.getClass().getName());
-        return ITransformerObject;
-      } catch (ClassNotFoundException e) {
-        LOG.error("Class not found: "+className+" error: "+e.getMessage());
-      } catch (InstantiationException e) {
-        LOG.error("Class not found: "+className+" error: "+e.getMessage());
-      } catch (IllegalAccessException e) {
-        LOG.error("Class not found: "+className+" error: "+e.getMessage());
-      }
-      
-      return new DefaultKinesisMessageModelSumologicTransformer();
+    getTransformer(KinesisConnectorConfiguration configuration) {
+
+        // Load specified class
+        String argClass = ((KinesisConnectorForSumologicConfiguration) configuration).TRANSFORMER_CLASS;
+        String className = "com.sumologic.client." + argClass;
+        ClassLoader classLoader = SumologicMessageModelPipeline.class.getClassLoader();
+        Class ModelClass = null;
+        try {
+            ModelClass = classLoader.loadClass(className);
+            ITransformer<SimpleKinesisMessageModel, String> ITransformerObject = (ITransformer<SimpleKinesisMessageModel, String>) ModelClass.newInstance();
+            LOG.info("Using transformer: " + ITransformerObject.getClass().getName());
+            return ITransformerObject;
+        } catch (ClassNotFoundException e) {
+            LOG.error("Class not found: " + className + " error: " + e.getMessage());
+        } catch (InstantiationException e) {
+            LOG.error("Class not found: " + className + " error: " + e.getMessage());
+        } catch (IllegalAccessException e) {
+            LOG.error("Class not found: " + className + " error: " + e.getMessage());
+        }
+
+        return new DefaultKinesisMessageModelSumologicTransformer();
     }
 
     @Override

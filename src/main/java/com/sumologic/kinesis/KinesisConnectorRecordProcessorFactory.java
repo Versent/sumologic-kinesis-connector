@@ -3,11 +3,7 @@ package com.sumologic.kinesis;
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessor;
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorFactory;
 import com.amazonaws.services.kinesis.connectors.KinesisConnectorConfiguration;
-import com.amazonaws.services.kinesis.connectors.interfaces.IBuffer;
-import com.amazonaws.services.kinesis.connectors.interfaces.IEmitter;
-import com.amazonaws.services.kinesis.connectors.interfaces.IFilter;
-import com.amazonaws.services.kinesis.connectors.interfaces.IKinesisConnectorPipeline;
-import com.amazonaws.services.kinesis.connectors.interfaces.ITransformerBase;
+import com.amazonaws.services.kinesis.connectors.interfaces.*;
 
 /**
  * This class is used to generate KinesisConnectorRecordProcessors that operate using the user's
@@ -21,7 +17,7 @@ public class KinesisConnectorRecordProcessorFactory<T, U> implements IRecordProc
     private KinesisConnectorConfiguration configuration;
 
     public KinesisConnectorRecordProcessorFactory(IKinesisConnectorPipeline<T, U> pipeline,
-            KinesisConnectorConfiguration configuration) {
+                                                  KinesisConnectorConfiguration configuration) {
         this.configuration = configuration;
         this.pipeline = pipeline;
     }

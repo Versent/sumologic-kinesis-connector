@@ -1,9 +1,9 @@
 package com.sumologic.client;
 
-import java.util.Properties;
-
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.services.kinesis.connectors.KinesisConnectorConfiguration;
+
+import java.util.Properties;
 
 /**
  * This class contains constants used to configure AWS Services in Amazon Kinesis Connectors. The user
@@ -14,7 +14,7 @@ public class KinesisConnectorForSumologicConfiguration extends KinesisConnectorC
     // Properties added for Sumologic
     public static final String PROP_SUMOLOGIC_URL = "sumologicUrl";
     public static final String PROP_TRANSFORMER_CLASS = "transformerClass";
-    
+
     private static final String DEFAULT_SUMOLOGIC_URL = null;
     private static final String DEFAULT_TRANSFORMER_CLASS = null;
 
@@ -27,7 +27,7 @@ public class KinesisConnectorForSumologicConfiguration extends KinesisConnectorC
      */
     public KinesisConnectorForSumologicConfiguration(Properties properties, AWSCredentialsProvider credentialsProvider) {
         super(properties, credentialsProvider);
-        
+
         SUMOLOGIC_URL = properties.getProperty(PROP_SUMOLOGIC_URL, DEFAULT_SUMOLOGIC_URL);
         TRANSFORMER_CLASS = properties.getProperty(PROP_TRANSFORMER_CLASS, DEFAULT_TRANSFORMER_CLASS);
     }

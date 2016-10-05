@@ -1,10 +1,10 @@
 package com.sumologic.client;
 
-import java.io.IOException;
-
 import com.amazonaws.services.kinesis.model.Record;
 import com.sumologic.client.implementations.SumologicTransformer;
 import com.sumologic.client.model.SimpleKinesisMessageModel;
+
+import java.io.IOException;
 
 /**
  * A custom transfomer for {@link SimpleKinesisMessageModel} records in JSON format. The output is in a format
@@ -26,9 +26,9 @@ public class DefaultKinesisMessageModelSumologicTransformer implements
 
     @Override
     public SimpleKinesisMessageModel toClass(Record record) throws IOException {
-      byte[] decodedRecord = record.getData().array();
-      String stringifiedRecord = new String(decodedRecord);
-      
-      return new SimpleKinesisMessageModel(stringifiedRecord);
+        byte[] decodedRecord = record.getData().array();
+        String stringifiedRecord = new String(decodedRecord);
+
+        return new SimpleKinesisMessageModel(stringifiedRecord);
     }
 }

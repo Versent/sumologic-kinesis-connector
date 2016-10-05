@@ -1,21 +1,15 @@
 package com.sumologic.kinesis;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.ObjectOutputStream;
+import com.amazonaws.services.kinesis.connectors.KinesisConnectorConfiguration;
+import com.amazonaws.services.kinesis.model.PutRecordRequest;
+import com.sumologic.client.model.SimpleKinesisMessageModel;
+import org.apache.log4j.Logger;
+
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
-import org.apache.log4j.Logger;
-
-import com.sumologic.client.model.SimpleKinesisMessageModel;
-import com.amazonaws.services.kinesis.connectors.KinesisConnectorConfiguration;
-import com.amazonaws.services.kinesis.model.PutRecordRequest;
 
 /**
  * This class is a data source for supplying input to the Amazon Kinesis stream. It reads lines from the

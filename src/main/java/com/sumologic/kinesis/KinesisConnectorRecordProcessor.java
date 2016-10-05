@@ -1,12 +1,5 @@
 package com.sumologic.kinesis;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import org.apache.log4j.Logger;
-
 import com.amazonaws.services.kinesis.clientlibrary.exceptions.InvalidStateException;
 import com.amazonaws.services.kinesis.clientlibrary.exceptions.KinesisClientLibDependencyException;
 import com.amazonaws.services.kinesis.clientlibrary.exceptions.ShutdownException;
@@ -16,13 +9,14 @@ import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorC
 import com.amazonaws.services.kinesis.clientlibrary.types.ShutdownReason;
 import com.amazonaws.services.kinesis.connectors.KinesisConnectorConfiguration;
 import com.amazonaws.services.kinesis.connectors.UnmodifiableBuffer;
-import com.amazonaws.services.kinesis.connectors.interfaces.IBuffer;
-import com.amazonaws.services.kinesis.connectors.interfaces.ICollectionTransformer;
-import com.amazonaws.services.kinesis.connectors.interfaces.IEmitter;
-import com.amazonaws.services.kinesis.connectors.interfaces.IFilter;
-import com.amazonaws.services.kinesis.connectors.interfaces.ITransformer;
-import com.amazonaws.services.kinesis.connectors.interfaces.ITransformerBase;
+import com.amazonaws.services.kinesis.connectors.interfaces.*;
 import com.amazonaws.services.kinesis.model.Record;
+import org.apache.log4j.Logger;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * This is the base class for any KinesisConnector. It is configured by a constructor that takes in
@@ -44,7 +38,6 @@ import com.amazonaws.services.kinesis.model.Record;
  * <li>When the shutdown() method of this class is invoked, a call is made to the IEmitter.shutdown() method which
  * should close any existing client connections.</li>
  * </ol>
- *
  */
 public class KinesisConnectorRecordProcessor<T, U> implements IRecordProcessor {
 
@@ -57,14 +50,14 @@ public class KinesisConnectorRecordProcessor<T, U> implements IRecordProcessor {
     private boolean isShutdown = false;
 
     private static final Logger LOG = Logger.getLogger(KinesisConnectorRecordProcessor.class.getName());
-    
+
     private String shardId;
 
     public KinesisConnectorRecordProcessor(IBuffer<T> buffer,
-            IFilter<T> filter,
-            IEmitter<U> emitter,
-            ITransformerBase<T, U> transformer,
-            KinesisConnectorConfiguration configuration) {
+                                           IFilter<T> filter,
+                                           IEmitter<U> emitter,
+                                           ITransformerBase<T, U> transformer,
+                                           KinesisConnectorConfiguration configuration) {
         if (buffer == null || filter == null || emitter == null || transformer == null) {
             throw new IllegalArgumentException("buffer, filter, emitter, and transformer must not be null");
         }

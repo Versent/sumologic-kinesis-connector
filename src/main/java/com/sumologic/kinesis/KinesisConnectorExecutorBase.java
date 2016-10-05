@@ -1,23 +1,21 @@
 package com.sumologic.kinesis;
 
-import org.apache.log4j.Logger;
-
-import com.sumologic.kinesis.KinesisConnectorRecordProcessorFactory;
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.KinesisClientLibConfiguration;
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.Worker;
 import com.amazonaws.services.kinesis.connectors.KinesisConnectorConfiguration;
 import com.amazonaws.services.kinesis.metrics.impl.NullMetricsFactory;
 import com.amazonaws.services.kinesis.metrics.interfaces.IMetricsFactory;
+import org.apache.log4j.Logger;
 
 public abstract class KinesisConnectorExecutorBase<T, U> implements Runnable {
     private static final Logger LOG = Logger.getLogger(KinesisConnectorExecutorBase.class.getName());
-    
+
     // Amazon Kinesis Client Library worker to process records
     protected Worker worker;
 
     /**
      * Initialize the Amazon Kinesis Client Library configuration and worker
-     * 
+     *
      * @param kinesisConnectorConfiguration Amazon Kinesis connector configuration
      */
     protected void initialize(KinesisConnectorConfiguration kinesisConnectorConfiguration) {
@@ -26,14 +24,14 @@ public abstract class KinesisConnectorExecutorBase<T, U> implements Runnable {
 
     /**
      * Initialize the Amazon Kinesis Client Library configuration and worker with metrics factory
-     * 
+     *
      * @param kinesisConnectorConfiguration Amazon Kinesis connector configuration
-     * @param metricFactory would be used to emit metrics in Amazon Kinesis Client Library
+     * @param metricFactory                 would be used to emit metrics in Amazon Kinesis Client Library
      */
     protected void
-            initialize(KinesisConnectorConfiguration kinesisConnectorConfiguration, IMetricsFactory metricFactory) {
-      
-      KinesisClientLibConfiguration kinesisClientLibConfiguration =
+    initialize(KinesisConnectorConfiguration kinesisConnectorConfiguration, IMetricsFactory metricFactory) {
+
+        KinesisClientLibConfiguration kinesisClientLibConfiguration =
                 new KinesisClientLibConfiguration(kinesisConnectorConfiguration.APP_NAME,
                         kinesisConnectorConfiguration.KINESIS_INPUT_STREAM,
                         kinesisConnectorConfiguration.AWS_CREDENTIALS_PROVIDER,
@@ -53,7 +51,7 @@ public abstract class KinesisConnectorExecutorBase<T, U> implements Runnable {
                                 + kinesisConnectorConfiguration.CONNECTOR_DESTINATION + ","
                                 + KinesisConnectorConfiguration.KINESIS_CONNECTOR_USER_AGENT)
                         .withRegionName(kinesisConnectorConfiguration.REGION_NAME);
-       
+
 
         if (!kinesisConnectorConfiguration.CALL_PROCESS_RECORDS_EVEN_FOR_EMPTY_LIST) {
             LOG.warn("The false value of callProcessRecordsEvenForEmptyList will be ignored. It must be set to true for the bufferTimeMillisecondsLimit to work correctly.");
@@ -62,7 +60,7 @@ public abstract class KinesisConnectorExecutorBase<T, U> implements Runnable {
         if (kinesisConnectorConfiguration.IDLE_TIME_BETWEEN_READS > kinesisConnectorConfiguration.BUFFER_MILLISECONDS_LIMIT) {
             LOG.warn("idleTimeBetweenReads is greater than bufferTimeMillisecondsLimit. For best results, ensure that bufferTimeMillisecondsLimit is more than or equal to idleTimeBetweenReads ");
         }
-     
+
         // If a metrics factory was specified, use it.
         if (metricFactory != null) {
             worker =
@@ -96,9 +94,9 @@ public abstract class KinesisConnectorExecutorBase<T, U> implements Runnable {
     /**
      * This method returns a {@link KinesisConnectorRecordProcessorFactory} that contains the
      * appropriate {@link IKinesisConnectorPipeline} for the Amazon Kinesis Enabled Application
-     * 
+     *
      * @return a {@link KinesisConnectorRecordProcessorFactory} that contains the appropriate
-     *         {@link IKinesisConnectorPipeline} for the Amazon Kinesis Enabled Application
+     * {@link IKinesisConnectorPipeline} for the Amazon Kinesis Enabled Application
      */
     public abstract KinesisConnectorRecordProcessorFactory<T, U> getKinesisConnectorRecordProcessorFactory();
 }

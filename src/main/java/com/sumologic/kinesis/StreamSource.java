@@ -1,21 +1,20 @@
 package com.sumologic.kinesis;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.ByteBuffer;
-
-import org.apache.log4j.Logger;
-
-import com.sumologic.client.model.SimpleKinesisMessageModel;
-import com.sumologic.kinesis.utils.KinesisUtils;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.regions.RegionUtils;
 import com.amazonaws.services.kinesis.AmazonKinesisClient;
 import com.amazonaws.services.kinesis.connectors.KinesisConnectorConfiguration;
 import com.amazonaws.services.kinesis.model.PutRecordRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sumologic.client.model.SimpleKinesisMessageModel;
+import com.sumologic.kinesis.utils.KinesisUtils;
+import org.apache.log4j.Logger;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.ByteBuffer;
 
 /**
  * This class is a data source for supplying input to the Amazon Kinesis stream. It reads lines from the
@@ -32,11 +31,9 @@ public class StreamSource implements Runnable {
 
     /**
      * Creates a new StreamSource.
-     * 
-     * @param config
-     *        Configuration to determine which stream to put records to and get {@link AWSCredentialsProvider}
-     * @param inputFile
-     *        File containing record data to emit on each line
+     *
+     * @param config    Configuration to determine which stream to put records to and get {@link AWSCredentialsProvider}
+     * @param inputFile File containing record data to emit on each line
      */
     public StreamSource(KinesisConnectorConfiguration config, String inputFile) {
         this(config, inputFile, false);
@@ -44,13 +41,10 @@ public class StreamSource implements Runnable {
 
     /**
      * Creates a new StreamSource.
-     * 
-     * @param config
-     *        Configuration to determine which stream to put records to and get {@link AWSCredentialsProvider}
-     * @param inputFile
-     *        File containing record data to emit on each line
-     * @param loopOverStreamSource
-     *        Loop over the stream source to continually put records
+     *
+     * @param config               Configuration to determine which stream to put records to and get {@link AWSCredentialsProvider}
+     * @param inputFile            File containing record data to emit on each line
+     * @param loopOverStreamSource Loop over the stream source to continually put records
      */
     public StreamSource(KinesisConnectorConfiguration config, String inputFile, boolean loopOverStreamSource) {
         this.config = config;
@@ -88,16 +82,13 @@ public class StreamSource implements Runnable {
 
     /**
      * Process the input file and send PutRecordRequests to Amazon Kinesis.
-     * 
+     * <p>
      * This function serves to Isolate StreamSource logic so subclasses
      * can process input files differently.
-     * 
-     * @param inputStream
-     *        the input stream to process
-     * @param iteration
-     *        the iteration if looping over file
-     * @throws IOException
-     *         throw exception if error processing inputStream.
+     *
+     * @param inputStream the input stream to process
+     * @param iteration   the iteration if looping over file
+     * @throws IOException throw exception if error processing inputStream.
      */
     protected void processInputStream(InputStream inputStream, int iteration) throws IOException {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
@@ -105,7 +96,6 @@ public class StreamSource implements Runnable {
             int lines = 0;
             while ((line = br.readLine()) != null) {
                 SimpleKinesisMessageModel kinesisMessageModel = new SimpleKinesisMessageModel(line);
-                //SimpleKinesisMessageModel kinesisMessageModel = objectMapper.readValue(line, SimpleKinesisMessageModel.class);
 
                 PutRecordRequest putRecordRequest = new PutRecordRequest();
                 putRecordRequest.setStreamName(config.KINESIS_INPUT_STREAM);
